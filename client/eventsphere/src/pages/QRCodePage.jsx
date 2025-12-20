@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import api from "../api/axios";
+import { useNavigate } from "react-router-dom";
 
 function QRCodePage() {
   const { registrationId } = useParams();
   const [qrDataUrl, setQrDataUrl] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchQR = async () => {
@@ -46,6 +49,7 @@ function QRCodePage() {
       )}
 
       <p>Show this QR at the event entrance.</p>
+      <button onClick={()=>{navigate("/dashboard")}}>Back To DashBoard. </button>
     </div>
   );
 }

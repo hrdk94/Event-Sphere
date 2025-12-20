@@ -10,6 +10,8 @@ import Events from "./pages/Events";
 import EventDetails from "./pages/EventDetails";
 import MyRegistrations from "./pages/MyRegistrations";
 import QRCodePage from "./pages/QRCodePage";
+import RedirectingDashboard from "./pages/RedirectingDashboard";
+import StudentDashboard from "./pages/StudentDashboard";
 
 function App() {
   return (
@@ -24,7 +26,7 @@ function App() {
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <Dashboard />
+                <RedirectingDashboard />
               </ProtectedRoute>
             }
           />
@@ -58,6 +60,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <QRCodePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/dashboard"
+            element={
+              <ProtectedRoute>
+                <StudentDashboard />
               </ProtectedRoute>
             }
           />
