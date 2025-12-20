@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import api from "../api/axios";
+import { useNavigate } from "react-router-dom";
+
 
 function Events() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -52,7 +56,7 @@ function Events() {
           </p>
 
           {/* View Details comes next phase */}
-          <button disabled>View Details</button>
+          <button onClick={()=>navigate(`/events/${event._id}`)}>View Details </button>
         </div>
       ))}
     </div>
