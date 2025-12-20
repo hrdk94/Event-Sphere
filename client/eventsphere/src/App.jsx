@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 import Events from "./pages/Events";
+import EventDetails from "./pages/EventDetails";
 
 function App() {
   return (
@@ -31,6 +32,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Events />
+              </ProtectedRoute>
+            }
+          />
+          <Route  
+            path="/events/:eventId"
+            element={
+              <ProtectedRoute>
+                <EventDetails />
               </ProtectedRoute>
             }
           />
