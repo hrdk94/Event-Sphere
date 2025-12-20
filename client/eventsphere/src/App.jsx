@@ -8,6 +8,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 import Events from "./pages/Events";
 import EventDetails from "./pages/EventDetails";
+import MyRegistrations from "./pages/MyRegistrations";
+import QRCodePage from "./pages/QRCodePage";
 
 function App() {
   return (
@@ -40,6 +42,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <EventDetails />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-registrations"
+            element={
+              <ProtectedRoute>
+                <MyRegistrations />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-registrations/:registrationId/qr"
+            element={
+              <ProtectedRoute>
+                <QRCodePage />
               </ProtectedRoute>
             }
           />

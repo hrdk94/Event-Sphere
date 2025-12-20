@@ -73,11 +73,12 @@ router.post("/events/:eventId/register", auth, requireRole("student"), async (re
 
 
     // Optional: you can send notification/email here
-    res.status(201).json({
-      message: "Registered successfully",
-      registrationId: registration._id,
-      status,
-    });
+    // res.status(201).json({
+    //   message: "Registered successfully",
+    //   registrationId: registration._id,
+    //   status,
+    // });
+
   } catch (err) {
     console.error("Register error:", err);
     res.status(500).json({ message: "Server error" });
@@ -203,9 +204,10 @@ router.get("/registrations/mine", auth, requireRole("student"), async (req, res)
       .populate("eventId", "title date venue createdBy")
       .sort({ createdAt: -1 });
 
-    res.json({ count: regs.length, registrations: regs });
-  } catch (err) {
-    console.error("Get mine error:", err);
+    // CHANGED THIS
+    res.json(regs);
+  }
+   catch (err) {
     res.status(500).json({ message: "Server error" });
   }
 });

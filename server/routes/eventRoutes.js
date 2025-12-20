@@ -1,6 +1,7 @@
 const express = require("express");
 const Event = require("../models/Event");
 const { auth, requireRole } = require("../middleware/auth");
+const Registration = require("../models/Registration");
 const router = express.Router();
 
 // CREATE event (club only)
@@ -44,5 +45,34 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+//register route updated
+router.post("/:id/register", auth, requireRole("student"), async (req, res) => {
+  try {
+    const eventId = req.params.id;
+
+    // no duplicate registration
+    const existing = await Registration.findOne({
+      userId: req.user.id,
+      eventId: eventId
+    });
+
+    if (existing) {
+      return res.status(400).json({ message: "Already registered" });
+    }
+
+    const registration = await Registration.create({
+      eventId: eventId,
+      userId: req.user.id
+    });
+
+    res.status(201).json({
+      message: "Registered successfully",
+      registrationId: registration._id
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Registration failed" });
+  }
+});
 
 module.exports = router;
