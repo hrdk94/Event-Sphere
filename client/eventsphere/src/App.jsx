@@ -12,6 +12,8 @@ import MyRegistrations from "./pages/MyRegistrations";
 import QRCodePage from "./pages/QRCodePage";
 import RedirectingDashboard from "./pages/RedirectingDashboard";
 import StudentDashboard from "./pages/StudentDashboard";
+import ClubDashboard from "./pages/ClubDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
@@ -70,6 +72,22 @@ function App() {
                 <StudentDashboard />
               </ProtectedRoute>
             }
+          />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route 
+          path="/club/dashboard"
+          element={
+            <ProtectedRoute>
+              <ClubDashboard />
+            </ProtectedRoute>
+          }
           />
         </Routes>
       </BrowserRouter>
