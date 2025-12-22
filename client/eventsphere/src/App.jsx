@@ -14,6 +14,9 @@ import RedirectingDashboard from "./pages/RedirectingDashboard";
 import StudentDashboard from "./pages/StudentDashboard";
 import ClubDashboard from "./pages/ClubDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminEvents from "./pages/AdminEvents";
+import CreateEvent from "./pages/CreateEvents";
+import ClubEvents from "./pages/ClubEvents";
 
 function App() {
   return (
@@ -58,10 +61,34 @@ function App() {
             }
           />
           <Route
+            path="/club/events/create"
+            element={
+              <ProtectedRoute>
+                <CreateEvent />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/club/events"
+            element={
+              <ProtectedRoute>
+                <ClubEvents />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/my-registrations/:registrationId/qr"
             element={
               <ProtectedRoute>
                 <QRCodePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/events"
+            element={
+              <ProtectedRoute>
+                <AdminEvents />
               </ProtectedRoute>
             }
           />

@@ -11,6 +11,13 @@ const eventSchema = new mongoose.Schema({
   participantLimit: Number,
   requiresApproval: { type: Boolean, default: false },
 
+  status: {
+  type: String,
+  enum: ["pending", "approved", "rejected"],
+  default: "pending"
+  },
+
+
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
