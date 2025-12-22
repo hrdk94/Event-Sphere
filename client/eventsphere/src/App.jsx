@@ -17,6 +17,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminEvents from "./pages/AdminEvents";
 import CreateEvent from "./pages/CreateEvents";
 import ClubEvents from "./pages/ClubEvents";
+import ClubRegistrations from "./pages/ClubRegistrations";
+import QRScanner from "./pages/QRScanner";
 
 function App() {
   return (
@@ -77,10 +79,26 @@ function App() {
             }
           />
           <Route
+            path="/club/events/:eventId/registrations"
+            element={
+              <ProtectedRoute>
+                <ClubRegistrations />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/my-registrations/:registrationId/qr"
             element={
               <ProtectedRoute>
                 <QRCodePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/club/scan"
+            element={
+              <ProtectedRoute>
+                <QRScanner />
               </ProtectedRoute>
             }
           />

@@ -247,4 +247,56 @@ router.get("/registrations/:regId/qrcode", auth, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+// CLUB: Verify QR and mark attendance
+router.post("/registrations/verify-qr", auth, requireRole("club"), async (req, res) => {
+  try {
+    const { qrToken } = req.body;
+
+    if (!qrToken) {
+      return res.status(400).json({ message: "QR token required" });
+    }
+
+    // Verify QR JWT
+    const decoded = jwt.verify(qrToken, process.env.JWT_SECRET);
+
+    const { regId, eventId } = decoded;
+
+    // Find registration
+    const registration = await Registration.findById(regId);
+    if (!registration) {
+      return res.status(404).json({ message: "Registration not found" });
+    }
+
+    // Prevent duplicate attendance
+    if (registration.attended) {
+      return res.status(400).json({ message: "Attendance already marked" });
+    }
+
+    // Check event ownership (club must own the event)
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    if (event.createdBy.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not allowed to verify this event" });
+    }
+
+    // Mark attendance
+    registration.attended = true;
+    await registration.save();
+
+    res.json({
+      message: "Attendance marked successfully",
+      studentId: registration.userId,
+      eventId: registration.eventId,
+    });
+  } catch (err) {
+    console.error("QR verify error:", err);
+    res.status(400).json({ message: "Invalid or expired QR" });
+  }
+});
+
+
 module.exports = router;
