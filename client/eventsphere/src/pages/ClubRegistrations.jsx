@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 
 function EventRegistrations() {
   const { eventId } = useParams();
   const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchRegistrations = async () => {
@@ -88,6 +91,10 @@ function EventRegistrations() {
               </button>
             </>
           )}
+
+          <button onClick={()=>{ navigate("/club/scan")}}>
+            Scan QR (Attendance)
+          </button>
         </div>
       ))}
     </div>

@@ -9,7 +9,6 @@ import { AuthProvider } from "./context/AuthContext";
 import Events from "./pages/Events";
 import EventDetails from "./pages/EventDetails";
 import MyRegistrations from "./pages/MyRegistrations";
-import QRCodePage from "./pages/QRCodePage";
 import RedirectingDashboard from "./pages/RedirectingDashboard";
 import StudentDashboard from "./pages/StudentDashboard";
 import ClubDashboard from "./pages/ClubDashboard";
@@ -19,6 +18,7 @@ import CreateEvent from "./pages/CreateEvents";
 import ClubEvents from "./pages/ClubEvents";
 import ClubRegistrations from "./pages/ClubRegistrations";
 import QRScanner from "./pages/QRScanner";
+import QRCodeTicket from "./pages/QRCodeTicket";
 
 function App() {
   return (
@@ -87,14 +87,6 @@ function App() {
             }
           />
           <Route
-            path="/my-registrations/:registrationId/qr"
-            element={
-              <ProtectedRoute>
-                <QRCodePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
             path="/club/scan"
             element={
               <ProtectedRoute>
@@ -131,6 +123,14 @@ function App() {
           element={
             <ProtectedRoute>
               <ClubDashboard />
+            </ProtectedRoute>
+          }
+          />
+          <Route 
+          path="/my-registrations/:regId/qr"
+          element={
+            <ProtectedRoute>
+              <QRCodeTicket />
             </ProtectedRoute>
           }
           />

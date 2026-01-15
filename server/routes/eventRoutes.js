@@ -50,35 +50,35 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-//register route updated
-router.post("/:id/register", auth, requireRole("student"), async (req, res) => {
-  try {
-    const eventId = req.params.id;
+// //register route updated
+// router.post("/:id/register", auth, requireRole("student"), async (req, res) => {
+//   try {
+//     const eventId = req.params.id;
 
-    // no duplicate registration
-    const existing = await Registration.findOne({
-      userId: req.user.id,
-      eventId: eventId
-    });
+//     // no duplicate registration
+//     const existing = await Registration.findOne({
+//       userId: req.user.id,
+//       eventId: eventId
+//     });
 
-    if (existing) {
-      return res.status(400).json({ message: "Already registered" });
-    }
+//     if (existing) {
+//       return res.status(400).json({ message: "Already registered" });
+//     }
 
-    const registration = await Registration.create({
-      eventId: eventId,
-      userId: req.user.id
-    });
+//     const registration = await Registration.create({
+//       eventId: eventId,
+//       userId: req.user.id
+//     });
 
-    res.status(201).json({
-      message: "Registered successfully",
-      registrationId: registration._id
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Registration failed" });
-  }
-});
+//     res.status(201).json({
+//       message: "Registered successfully",
+//       registrationId: registration._id
+//     });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: "Registration failed" });
+//   }
+// });
 
 // ADMIN: Get all events
 router.get("/admin/all", auth, requireRole("admin"), async (req, res) => {

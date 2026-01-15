@@ -3,22 +3,39 @@ const jwt = require("jsonwebtoken");
 module.exports = {
   auth: (req, res, next) => {
     try {
-      const token = req.headers.authorization?.split(" ")[1];
-      if (!token) return res.status(401).send("No token");
+      const authHeader = req.headers.authorization;
+
+      if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res.status(401).json({ message: "No token provided" });
+      }
+
+      const token = authHeader.split(" ")[1];
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = decoded;
+
+      // ✅ NORMALIZED USER OBJECT
+      req.user = {
+        id: decoded.id || decoded._id || decoded.userId,
+        role: decoded.role?.toLowerCase(),
+      };
+
+      if (!req.user.id) {
+        return res.status(401).json({ message: "Invalid token payload" });
+      }
+
       next();
     } catch (err) {
-      res.status(401).send("Invalid Token");
+      console.error("Auth error:", err.message);
+      return res.status(401).json({ message: "Invalid or expired token" });
     }
   },
 
   requireRole: (role) => {
     return (req, res, next) => {
-      if (req.user.role !== role)
-        return res.status(403).send("Access Denied");
+      if (!req.user || req.user.role !== role) {
+        return res.status(403).json({ message: "Access Denied" });
+      }
       next();
     };
-  }
+  },
 };

@@ -11,12 +11,18 @@ const { auth, requireRole } = require("../middleware/auth");
 
 const router = express.Router();
 
+console.log("Registrations.js ROUTER LOADED");
+
+
 /**
  * POST /api/events/:eventId/register
  * Student registers for an event -> create Registration
  */
 router.post("/events/:eventId/register", auth, requireRole("student"), async (req, res) => {
   try {
+
+    console.log("REGISTER ROUTE WITH QR HIT");
+
     const { eventId } = req.params;
     const userId = req.user.id || req.user._id; // support both middleware styles
 

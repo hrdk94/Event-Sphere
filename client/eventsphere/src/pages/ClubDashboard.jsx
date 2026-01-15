@@ -22,11 +22,19 @@ function ClubDashboard() {
           Create Event
         </button>
 
+        <br /> <br />
+
+        <button onClick={()=> {navigate("/club/scan")}}>
+          Scan QR (Mark Attendance)
+        </button>
+
         <br /><br />
 
         <button onClick={logout}>
           Logout
         </button>
+
+        
       </div>
     </div>
   );
