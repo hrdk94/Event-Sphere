@@ -4,6 +4,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const connectDB = require("./config/db");
 
+
 dotenv.config();
 connectDB();
 
@@ -31,3 +32,7 @@ app.use("/api", registrationRoutes);
 
 const attendanceRoutes = require("./routes/attendanceRoutes");
 app.use("/api", attendanceRoutes);
+
+app.use("/api/stats", require("./routes/stats"));
+
+app.use("/api/club", require("./routes/club"));

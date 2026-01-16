@@ -3,6 +3,7 @@ const Event = require("../models/Event");
 const { auth, requireRole } = require("../middleware/auth");
 const Registration = require("../models/Registration");
 const router = express.Router();
+const getEventStatus = require("../utils/eventStatus");
 
 // CREATE event (club only)
 router.post("/create", auth, requireRole("club"), async (req, res) => {
@@ -26,7 +27,12 @@ router.get("/", async (req, res) => {
     const events = await Event.find({ status: "approved" })
       .sort({ date: 1 });
 
-    res.json(events);
+    const eventsWithStatus = events.map(event => ({
+      ...event.toObject(),
+      timeStatus: getEventStatus(event.date),
+    }));
+
+    res.json(eventsWithStatus);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error fetching events" });
@@ -43,9 +49,12 @@ router.get("/:id", async (req, res) => {
       return res.status(404).json({ message: "Event not found" });
     }
 
-    res.json(event);
+    res.json({
+      ...event.toObject(),
+      timeStatus: getEventStatus(event.date),
+    });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(500).json({ message: "Error fetching event" });
   }
 });

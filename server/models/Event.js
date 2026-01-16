@@ -16,8 +16,12 @@ const eventSchema = new mongoose.Schema({
   enum: ["pending", "approved", "rejected"],
   default: "pending"
   },
-
-
+  
+  isCancelled: {
+    type: Boolean,
+    default: false,
+  },
+  
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

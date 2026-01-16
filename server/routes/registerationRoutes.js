@@ -4,6 +4,7 @@ const Event = require("../models/Event");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const qrcode = require("qrcode");
+const getEventStatus = require("../utils/eventStatus");
 
 // Adjust this require to match your middleware filename
 // If you used authMiddleware.js earlier: require("../middleware/authMiddleware")
@@ -29,6 +30,12 @@ router.post("/events/:eventId/register", auth, requireRole("student"), async (re
     // 1) Check event exists
     const event = await Event.findById(eventId);
     if (!event) return res.status(404).json({ message: "Event not found" });
+
+    if (event.isCancelled){
+      return res.status(400).json({
+        message: "Event has been cancelled"
+      });
+    }
 
     // 2) Prevent registration for past events
     if (new Date(event.date) < new Date())
@@ -256,53 +263,68 @@ router.get("/registrations/:regId/qrcode", auth, async (req, res) => {
 
 // CLUB: Verify QR and mark attendance
 router.post("/registrations/verify-qr", auth, requireRole("club"), async (req, res) => {
-  try {
-    const { qrToken } = req.body;
+    try {
+      const { qrToken } = req.body;
 
-    if (!qrToken) {
-      return res.status(400).json({ message: "QR token required" });
+      if (!qrToken) {
+        return res.status(400).json({ message: "QR token required" });
+      }
+
+      // Verify QR JWT
+      const decoded = jwt.verify(qrToken, process.env.JWT_SECRET);
+      const { regId, eventId } = decoded;
+
+      // Find registration
+      const registration = await Registration.findById(regId);
+      if (!registration) {
+        return res.status(404).json({ message: "Registration not found" });
+      }
+
+      // Prevent duplicate attendance
+      if (registration.attended) {
+        return res.status(400).json({ message: "Attendance already marked" });
+      }
+
+      // Fetch event
+      const event = await Event.findById(eventId);
+      if (!event) {
+        return res.status(404).json({ message: "Event not found" });
+      }
+
+      if(event.isCancelled){
+        return res.status(400).json({message: "Event has been cancelled. QR scan disabled"});
+      }
+
+      // Ensure club owns the event
+      if (event.createdBy.toString() !== req.user.id) {
+        return res
+          .status(403)
+          .json({ message: "Not allowed to verify this event" });
+      }
+
+      // Time-based restriction (FEATURE 4)
+      const timeStatus = getEventStatus(event.date);
+
+      if (timeStatus !== "ongoing") {
+        return res.status(400).json({
+          message: `QR scan not allowed. Event is ${timeStatus}.`,
+        });
+      }
+
+      //Mark attendance
+      registration.attended = true;
+      await registration.save();
+
+      res.json({
+        message: "Attendance marked successfully",
+        studentId: registration.userId,
+        eventId: registration.eventId,
+      });
+    } catch (err) {
+      console.error("QR verify error:", err);
+      res.status(400).json({ message: "Invalid or expired QR" });
     }
-
-    // Verify QR JWT
-    const decoded = jwt.verify(qrToken, process.env.JWT_SECRET);
-
-    const { regId, eventId } = decoded;
-
-    // Find registration
-    const registration = await Registration.findById(regId);
-    if (!registration) {
-      return res.status(404).json({ message: "Registration not found" });
-    }
-
-    // Prevent duplicate attendance
-    if (registration.attended) {
-      return res.status(400).json({ message: "Attendance already marked" });
-    }
-
-    // Check event ownership (club must own the event)
-    const event = await Event.findById(eventId);
-    if (!event) {
-      return res.status(404).json({ message: "Event not found" });
-    }
-
-    if (event.createdBy.toString() !== req.user.id) {
-      return res.status(403).json({ message: "Not allowed to verify this event" });
-    }
-
-    // Mark attendance
-    registration.attended = true;
-    await registration.save();
-
-    res.json({
-      message: "Attendance marked successfully",
-      studentId: registration.userId,
-      eventId: registration.eventId,
-    });
-  } catch (err) {
-    console.error("QR verify error:", err);
-    res.status(400).json({ message: "Invalid or expired QR" });
   }
-});
-
+);
 
 module.exports = router;
