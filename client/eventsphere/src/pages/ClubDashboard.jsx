@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ClubNav from "../components/ClubNav";
+import api from "../api/axios";
 
 const ClubDashboard = () => {
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ const ClubDashboard = () => {
             </p>
           </div>
         </div>
-        
+
         {/* Actions */}
         <div className="flex flex-wrap gap-4">
           <button

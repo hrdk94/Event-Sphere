@@ -2,7 +2,9 @@ const express = require("express");
 const Registration = require("../models/Registration");
 const { auth, requireRole } = require("../middleware/auth");
 const Event = require("../models/Event");
-const Registration = require("../models/Registration");
+const User = require("../models/User");
+
+// const Registration = require("../models/Registration");
 
 const router = express.Router();
 

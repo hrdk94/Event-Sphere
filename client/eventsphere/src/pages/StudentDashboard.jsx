@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import StudentNav from "../components/StudentNav";
+import api from "../api/axios";
 
 function StudentDashboard() {
   const navigate = useNavigate();
