@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import api from "../api/axios";
+import ClubNav from "../components/ClubNav";
 
 function QRScanner() {
   const [qrToken, setQrToken] = useState("");
@@ -20,6 +21,7 @@ function QRScanner() {
 
   return (
     <div>
+      <ClubNav />
       <h2>QR Attendance Scanner</h2>
 
       <textarea

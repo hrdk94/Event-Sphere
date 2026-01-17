@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../api/axios";
+import AdminNav from "../components/AdminNav";
 
 function AdminEvents() {
   const [events, setEvents] = useState([]);
@@ -51,6 +52,7 @@ function AdminEvents() {
 
   return (
     <div>
+      <AdminNav />
       <h2>All Events (Admin)</h2>
 
       {events.map((event) => (

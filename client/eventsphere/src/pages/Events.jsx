@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
+import StudentNav from "../components/StudentNav";
 
 
 function Events() {
@@ -34,6 +35,7 @@ function Events() {
 
   return (
     <div>
+      <StudentNav />
       <h2>Available Events</h2>
 
       {events.map((event) => (

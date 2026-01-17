@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/axios";
+import ClubNav from "../components/ClubNav";
 
 function ClubEventStats() {
   const { eventId } = useParams();
@@ -26,6 +27,7 @@ function ClubEventStats() {
   return (
     <div>
       <h2>Event Stats</h2>
+      <ClubNav />
       <p>Total: {stats.total}</p>
       <p>Approved: {stats.approved}</p>
       <p>Pending: {stats.pending}</p>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import ClubNav from "../components/ClubNav";
 
 function CreateEvent() {
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ function CreateEvent() {
 
   return (
     <div>
+      <ClubNav />
       <h2>Create Event</h2>
 
       <form onSubmit={handleSubmit}>

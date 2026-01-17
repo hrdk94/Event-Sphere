@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/axios";
+import StudentNav from "../components/StudentNav";
 
 function EventDetails() {
   const { eventId } = useParams();
@@ -43,6 +44,7 @@ function EventDetails() {
 
   return (
     <div>
+      <StudentNav />
       <h2>{event.title}</h2>
 
       <p>{event.description}</p>

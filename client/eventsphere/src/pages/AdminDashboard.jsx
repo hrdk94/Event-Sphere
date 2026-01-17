@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import AdminNav from "../components/AdminNav";
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -8,6 +9,7 @@ function AdminDashboard() {
 
   return (
     <div>
+      <AdminNav />
       <h2>Admin Dashboard</h2>
       <p>Welcome, {user?.name || "Admin"}</p>
 

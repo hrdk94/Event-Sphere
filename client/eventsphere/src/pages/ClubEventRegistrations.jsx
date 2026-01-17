@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/axios";
+import ClubNav from "../components/ClubNav";
 
 function ClubEventRegistrations() {
   const { eventId } = useParams();
@@ -34,6 +35,7 @@ function ClubEventRegistrations() {
 
   return (
     <div>
+      <ClubNav />
       <h2>Registrations</h2>
 
       {registrations.map((reg) => (

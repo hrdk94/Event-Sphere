@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/axios";
+import StudentNav from "../components/StudentNav";
 
 function QRCodeTicket() {
   const { regId } = useParams();
@@ -30,6 +31,7 @@ function QRCodeTicket() {
 
   return (
     <div>
+      <StudentNav />
       <h2>Your Event QR Ticket</h2>
 
       <p>Please show this QR code at the event entrance.</p>

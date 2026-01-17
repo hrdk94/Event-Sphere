@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import ClubNav from "../components/ClubNav";
 
 function ClubEvents() {
   const [events, setEvents] = useState([]);
@@ -49,6 +50,7 @@ function ClubEvents() {
   return (
     <div>
       <h2>My Events</h2>
+      <ClubNav />
 
       {events.map((event) => (
         <div

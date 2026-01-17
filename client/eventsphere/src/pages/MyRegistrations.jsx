@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import StudentNav from "../components/StudentNav";
 
 function MyRegistrations() {
   const [registrations, setRegistrations] = useState([]);
@@ -32,6 +33,7 @@ function MyRegistrations() {
 
   return (
     <div>
+      <StudentNav />
       <h2>My Registrations</h2>
 
       {registrations.map((reg) => (
