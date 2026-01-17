@@ -19,6 +19,8 @@ import ClubEvents from "./pages/ClubEvents";
 import ClubRegistrations from "./pages/ClubRegistrations";
 import QRScanner from "./pages/QRScanner";
 import QRCodeTicket from "./pages/QRCodeTicket";
+import ClubEventStats from "./pages/ClubEventStats";
+import ClubEventRegistrations from "./pages/ClubEventRegistrations";
 
 function App() {
   return (
@@ -134,6 +136,22 @@ function App() {
             </ProtectedRoute>
           }
           />
+          <Route
+          path="/club/events/:eventId/stats"
+          element={
+            <ProtectedRoute>
+              <ClubEventStats />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/club/events/:eventId/registrations"
+          element={
+            <ProtectedRoute>
+              <ClubEventRegistrations />
+            </ProtectedRoute>
+          }
+        />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
