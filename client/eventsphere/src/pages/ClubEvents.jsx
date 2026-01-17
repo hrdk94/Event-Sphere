@@ -25,32 +25,33 @@ function ClubEvents() {
   }, []);
 
   const handleCancelEvent = async (eventId) => {
-  try {
-    await api.patch(`/club/events/${eventId}/cancel`);
+    try {
+      await api.patch(`/club/events/${eventId}/cancel`);
 
-    // update local state immediately
-    setEvents((prev) =>
-      prev.map((ev) =>
-        ev._id === eventId ? { ...ev, isCancelled: true } : ev
-      )
-    );
+      // Update UI immediately
+      setEvents((prev) =>
+        prev.map((ev) =>
+          ev._id === eventId ? { ...ev, isCancelled: true } : ev
+        )
+      );
 
-    setMessage("Event cancelled successfully");
-  } catch (err) {
-    setMessage(
-      err.response?.data?.message || "Failed to cancel event"
-    );
-  }
-};
-
+      setMessage("Event cancelled successfully");
+    } catch (err) {
+      setMessage(
+        err.response?.data?.message || "Failed to cancel event"
+      );
+    }
+  };
 
   if (loading) return <p>Loading your events...</p>;
   if (events.length === 0) return <p>You haven’t created any events yet.</p>;
 
   return (
     <div>
-      <h2>My Events</h2>
       <ClubNav />
+      <h2>My Events</h2>
+
+      {message && <p>{message}</p>}
 
       {events.map((event) => (
         <div
@@ -64,27 +65,54 @@ function ClubEvents() {
           <h3>{event.title}</h3>
 
           <p>
-            <strong>Status:</strong> {event.status}
+            <strong>Approval Status:</strong> {event.status}
           </p>
+
+          <p>
+            <strong>Time Status:</strong> {event.timeStatus}
+          </p>
+
+          {event.isCancelled && (
+            <p style={{ color: "red" }}>❌ Event Cancelled</p>
+          )}
 
           <p>
             <strong>Date:</strong>{" "}
             {new Date(event.date).toDateString()}
           </p>
 
-          <button
-            onClick={() =>
-              navigate(`/club/events/${event._id}/registrations`)
-            }
-          >
-            View Registrations
-          </button>
+          {/* Actions */}
+          {event.status === "approved" && !event.isCancelled && (
+            <>
+              <button
+                onClick={() =>
+                  navigate(`/club/events/${event._id}/registrations`)
+                }
+              >
+                View Registrations
+              </button>{" "}
+              <button
+                onClick={() =>
+                  navigate(`/club/events/${event._id}/stats`)
+                }
+              >
+                View Stats
+              </button>
+            </>
+          )}
+
+          <br /><br />
 
           {event.isCancelled ? (
-            <p style ={{color: "red"}}> Event Cancelled </p>
-          ):(
-            <button onClick={()=> handleCancelEvent(event_.id)}>
-              Cancel Events 
+            <p style={{ color: "red" }}>
+              No actions available (event cancelled)
+            </p>
+          ) : (
+            <button
+              onClick={() => handleCancelEvent(event._id)}
+              style={{ color: "red" }}
+            >
+              Cancel Event
             </button>
           )}
         </div>

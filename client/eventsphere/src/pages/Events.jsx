@@ -56,6 +56,12 @@ function Events() {
           <p>
             <strong>Venue:</strong> {event.venue}
           </p>
+          <p>
+            <strong>Time: </strong> {event.timeStatus}
+          </p>
+          {event.isCancelled && (
+            <p style ={{color: "red"}}>Event Cancelled</p>
+          )}
 
           {/* View Details comes next phase */}
           <button onClick={()=>navigate(`/events/${event._id}`)}>View Details </button>

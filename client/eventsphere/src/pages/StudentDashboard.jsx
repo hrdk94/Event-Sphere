@@ -17,7 +17,7 @@ function StudentDashboard() {
         </button>
 
         <br /><br />
-
+        
         <button onClick={() => navigate("/my-registrations")}>
           My Registrations
         </button>

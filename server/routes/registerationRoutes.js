@@ -327,4 +327,102 @@ router.post("/registrations/verify-qr", auth, requireRole("club"), async (req, r
   }
 );
 
+/**
+ * GET /api/registrations/:regId/certificate/status
+ * Check if certificate is available
+ */
+router.get(
+  "/registrations/:regId/certificate/status",
+  auth,
+  async (req, res) => {
+    try {
+      const { regId } = req.params;
+
+      const reg = await Registration.findById(regId)
+        .populate("eventId");
+
+      if (!reg) {
+        return res.status(404).json({ message: "Registration not found" });
+      }
+
+      // Ownership check
+      if (reg.userId.toString() !== req.user.id) {
+        return res.status(403).json({ message: "Forbidden" });
+      }
+
+      if (reg.eventId.isCancelled) {
+        return res.json({
+          eligible: false,
+          reason: "Event was cancelled",
+        });
+      }
+
+      if (reg.status !== "approved") {
+        return res.json({
+          eligible: false,
+          reason: "Registration not approved",
+        });
+      }
+
+      if (!reg.attended) {
+        return res.json({
+          eligible: false,
+          reason: "Attendance not marked",
+        });
+      }
+
+      return res.json({
+        eligible: true,
+        certificateIssued: reg.certificateIssued,
+      });
+    } catch (err) {
+      console.error("Certificate status error:", err);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+
+/**
+ * POST /api/registrations/:regId/certificate/issue
+ * Mark certificate as issued
+ */
+router.post(
+  "/registrations/:regId/certificate/issue",
+  auth,
+  async (req, res) => {
+    try {
+      const { regId } = req.params;
+
+      const reg = await Registration.findById(regId)
+        .populate("eventId");
+
+      if (!reg) {
+        return res.status(404).json({ message: "Registration not found" });
+      }
+
+      const isAdmin = req.user.role === "admin";
+      const isClubOwner =
+        reg.eventId.createdBy.toString() === req.user.id;
+
+      if (!isAdmin && !isClubOwner) {
+        return res.status(403).json({ message: "Forbidden" });
+      }
+
+      if (!reg.attended || reg.status !== "approved") {
+        return res.status(400).json({
+          message: "Certificate not eligible",
+        });
+      }
+
+      reg.certificateIssued = true;
+      await reg.save();
+
+      res.json({ message: "Certificate issued" });
+    } catch (err) {
+      console.error("Certificate issue error:", err);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+
 module.exports = router;

@@ -12,7 +12,7 @@ function MyRegistrations() {
     const fetchRegistrations = async () => {
       try {
         const res = await api.get("/registrations/mine");
-        setRegistrations(res.data); // backend returns ARRAY
+        setRegistrations(res.data);
       } catch (err) {
         console.error("Failed to fetch registrations", err);
       } finally {
@@ -23,9 +23,7 @@ function MyRegistrations() {
     fetchRegistrations();
   }, []);
 
-  if (loading) {
-    return <p>Loading your registrations...</p>;
-  }
+  if (loading) return <p>Loading your registrations...</p>;
 
   if (registrations.length === 0) {
     return <p>You have not registered for any events.</p>;
@@ -41,29 +39,71 @@ function MyRegistrations() {
           key={reg._id}
           style={{
             border: "1px solid #ccc",
-            padding: "12px",
-            marginBottom: "12px",
+            padding: "16px",
+            marginBottom: "16px",
           }}
         >
-          <h3>{reg.eventId.title}</h3>
+          {/* EVENT INFO */}
+          <section>
+            <h3>{reg.eventId.title}</h3>
+            <p>
+              <strong>Date:</strong>{" "}
+              {new Date(reg.eventId.date).toDateString()}
+            </p>
 
-          <p>
-            <strong>Date:</strong>{" "}
-            {new Date(reg.eventId.date).toDateString()}
-          </p>
+            {reg.eventId.isCancelled && (
+              <p style={{ color: "red" }}>❌ Event Cancelled</p>
+            )}
+          </section>
 
-          <p>
-            <strong>Status:</strong>{" "}
-            {reg.attended ? "Attended" : reg.status}
-          </p>
+          <hr />
 
-          <button
-            onClick={() =>
-              navigate(`/my-registrations/${reg._id}/qr`)
-            }
-          >
-            View QR Ticket
-          </button>
+          {/* REGISTRATION STATUS */}
+          <section>
+            <p>
+              <strong>Registration Status:</strong>{" "}
+              {reg.status === "pending" && "🕒 Pending Approval"}
+              {reg.status === "approved" && "✅ Approved"}
+              {reg.status === "rejected" && "❌ Rejected"}
+            </p>
+          </section>
+
+          {/* ATTENDANCE + QR */}
+          <section>
+            <p>
+              <strong>Attendance:</strong>{" "}
+              {reg.attended ? "✅ Attended" : "❌ Not Attended"}
+            </p>
+
+            {reg.status === "approved" &&
+            !reg.attended &&
+            !reg.eventId.isCancelled &&
+            reg.eventId.timeStatus !== "past" ? (
+              <button
+                onClick={() =>
+                  navigate(`/my-registrations/${reg._id}/qr`)
+                }
+              >
+                View QR Ticket
+              </button>
+            ) : (
+              <p>QR not available</p>
+            )}
+          </section>
+
+          <hr />
+
+          {/* CERTIFICATE */}
+          <section>
+            <p>
+              <strong>Certificate:</strong>{" "}
+              {reg.certificateIssued
+                ? "🏅 Issued"
+                : reg.attended
+                ? "⏳ Eligible"
+                : "❌ Not Eligible"}
+            </p>
+          </section>
         </div>
       ))}
     </div>

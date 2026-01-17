@@ -12,6 +12,10 @@ const registrationSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    certicateIssued:{
+      type: Boolean,
+      default: false,
+    },
     status: {
       type: String,
       enum: ["pending", "approved", "rejected"],

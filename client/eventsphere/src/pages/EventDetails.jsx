@@ -63,9 +63,15 @@ function EventDetails() {
         {event.participantLimit || "Unlimited"}
       </p>
 
-      <button onClick={handleRegister} disabled={registering}>
-        {registering ? "Registering..." : "Register"}
-      </button>
+      {event.isCancelled ? (
+          <p style={{ color: "red" }}>Registration closed</p>
+        ) : event.timeStatus !== "upcoming" ? (
+          <p>Registration closed</p>
+        ) : (
+          <button onClick={() => handleRegister(event._id)}>
+            Register
+          </button>
+      )}
 
       {message && <p>{message}</p>}
     </div>
