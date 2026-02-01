@@ -12,7 +12,7 @@ function MyRegistrations() {
     const fetchRegistrations = async () => {
       try {
         const res = await api.get("/registrations/mine");
-        setRegistrations(res.data); // backend returns ARRAY
+        setRegistrations(res.data);
       } catch (err) {
         console.error("Failed to fetch registrations", err);
       } finally {
@@ -24,81 +24,136 @@ function MyRegistrations() {
   }, []);
 
   if (loading) {
-    return <p>Loading your registrations...</p>;
+    return (
+      <div className="min-h-screen bg-zinc-900 text-zinc-100 p-6">
+        <StudentNav />
+        <p className="mt-8 text-zinc-400">Loading your registrations...</p>
+      </div>
+    );
   }
 
   if (registrations.length === 0) {
-    return <p>You have not registered for any events.</p>;
+    return (
+      <div className="min-h-screen bg-zinc-900 text-zinc-100 p-6">
+        <StudentNav />
+        <p className="mt-8 text-zinc-400">
+          You have not registered for any events.
+        </p>
+      </div>
+    );
   }
 
   return (
-    <div>
+    <div className="min-h-screen bg-zinc-900 text-zinc-100 p-6">
       <StudentNav />
-      <h2>My Registrations</h2>
 
-      {registrations.map((reg) => (
-        <div
-          key={reg._id}
-          style={{
-            border: "1px solid #ccc",
-            padding: "12px",
-            marginBottom: "12px",
-          }}
-        >
-          <h3>{reg.eventId.title}</h3>
+      <div className="max-w-3xl mx-auto mt-8">
+        <h2 className="text-2xl font-semibold mb-6 text-white">
+          My Registrations
+        </h2>
 
-          <p>
-            <strong>Date:</strong>{" "}
-            {new Date(reg.eventId.date).toDateString()}
-          </p>
+        <div className="space-y-5">
+          {registrations.map((reg) => (
+            <div
+              key={reg._id}
+              className="rounded-xl bg-zinc-800 border border-zinc-700 p-5 shadow-md"
+            >
+              <div className="space-y-4">
+                {/* EVENT INFO */}
+                <section>
+                  <h3 className="text-lg font-semibold tracking-tight text-white">
+                    {reg.eventId.title}
+                  </h3>
+                  <p className="text-sm text-zinc-400">
+                    {new Date(reg.eventId.date).toDateString()}
+                  </p>
 
-          <p>
-            <strong>Status:</strong>{" "}
-            {reg.status === "pending" && "Pending Approval"}
-            {reg.status === "approved" && "Approved"}
-            {reg.status === "rejected" && "Rejected"}
-          </p>
+                  {reg.eventId.isCancelled && (
+                    <p className="mt-1 text-sm text-red-400">
+                      ❌ Event Cancelled
+                    </p>
+                  )}
+                </section>
 
-          <p>
-            <strong>Attendance:</strong>{" "}
-            {reg.attended ? " Attended" : " Not Attended"}
-          </p>
+                <hr className="border-zinc-700" />
 
-          {reg.eventId.isCancelled && (
-            <p style={{ color: "red" }}>Event Cancelled</p>
-          )}
+                {/* STATUS */}
+                <section className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <p>
+                    <span className="text-zinc-400">Registration:</span>{" "}
+                    {reg.status === "pending" && (
+                      <span className="text-yellow-400 ml-1">
+                        Pending Approval
+                      </span>
+                    )}
+                    {reg.status === "approved" && (
+                      <span className="text-green-400 ml-1">
+                        Approved
+                      </span>
+                    )}
+                    {reg.status === "rejected" && (
+                      <span className="text-red-400 ml-1">
+                        Rejected
+                      </span>
+                    )}
+                  </p>
 
-          <p>
-            <strong>Status:</strong>{" "}
-            {reg.attended ? "Attended" : reg.status}
-          </p>
+                  <p>
+                    <span className="text-zinc-400">Attendance:</span>{" "}
+                    {reg.attended ? (
+                      <span className="text-green-400 ml-1">
+                        Attended
+                      </span>
+                    ) : (
+                      <span className="text-zinc-400 ml-1">
+                        Not Attended
+                      </span>
+                    )}
+                  </p>
+                </section>
 
-          {reg.status === "approved" &&
-            !reg.attended &&
-            !reg.eventId.isCancelled &&
-            reg.eventId.timeStatus !== "past" ? (
-              <button
-                onClick={() =>
-                  navigate(`/my-registrations/${reg._id}/qr`)
-                }
-              >
-                View QR Ticket
-              </button>
-            ) : (
-              <p>QR not available</p>
-            )}
+                {/* ACTIONS */}
+                <section className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  {reg.status === "approved" &&
+                  !reg.attended &&
+                  !reg.eventId.isCancelled &&
+                  reg.eventId.timeStatus !== "past" ? (
+                    <button
+                      onClick={() =>
+                        navigate(`/my-registrations/${reg._id}/qr`)
+                      }
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-blue-500/90 hover:bg-blue-500 text-white text-sm font-medium transition"
+                    >
+                      View QR Ticket
+                    </button>
+                  ) : (
+                    <p className="text-sm text-zinc-500 italic">
+                      QR not available
+                    </p>
+                  )}
 
-            <p>
-              <strong>Certificate:</strong>{" "}
-              {reg.certificateIssued
-                ? "Issued"
-                : reg.attended
-                ? "Eligible"
-                : "Not Eligible"}
-            </p>
-
+                  <p className="text-sm">
+                    <span className="text-zinc-400">Certificate:</span>{" "}
+                    {reg.certificateIssued ? (
+                      <span className="text-green-400 ml-1">
+                        Issued
+                      </span>
+                    ) : reg.attended ? (
+                      <span className="text-yellow-400 ml-1">
+                        Eligible
+                      </span>
+                    ) : (
+                      <span className="text-zinc-500 ml-1">
+                        Not Eligible
+                      </span>
+                    )}
+                  </p>
+                </section>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
     </div>
   );
 }

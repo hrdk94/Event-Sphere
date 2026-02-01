@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/axios";
 import ClubNav from "../components/ClubNav";
+import React from "react";
 
 function ClubEventStats() {
   const { eventId } = useParams();
