@@ -15,9 +15,7 @@ function QRCodeTicket() {
         const res = await api.get(`/registrations/${regId}/qrcode`);
         setQr(res.data.dataUrl);
       } catch (err) {
-        setError(
-          err.response?.data?.message || "Failed to load QR code"
-        );
+        setError(err.response?.data?.message || "Failed to load QR code");
       } finally {
         setLoading(false);
       }
@@ -26,19 +24,53 @@ function QRCodeTicket() {
     fetchQR();
   }, [regId]);
 
-  if (loading) return <p>Loading QR ticket...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-zinc-900 text-zinc-100">
+        <StudentNav />
+        <div className="max-w-md mx-auto p-6 text-zinc-400">
+          Loading QR ticket…
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-zinc-900 text-zinc-100">
+        <StudentNav />
+        <div className="max-w-md mx-auto p-6 text-red-400">
+          {error}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div>
+    <div className="min-h-screen bg-zinc-900 text-zinc-100">
       <StudentNav />
-      <h2>Your Event QR Ticket</h2>
 
-      <p>Please show this QR code at the event entrance.</p>
+      <div className="max-w-md mx-auto p-6">
+        <h1 className="text-xl font-semibold text-white mb-4 text-center">
+          Your Event QR Ticket
+        </h1>
 
-      <img src={qr} alt="Event QR Code" />
+        <div className="bg-zinc-800 border border-zinc-700 rounded-xl p-6 flex flex-col items-center space-y-4">
+          <img
+            src={qr}
+            alt="Event QR Code"
+            className="w-56 h-56 bg-white p-2 rounded"
+          />
 
-      <p><strong>Note:</strong> QR can be scanned only once.</p>
+          <p className="text-sm text-zinc-400 text-center">
+            Show this QR code at the event entrance for verification.
+          </p>
+
+          <p className="text-xs text-zinc-500 text-center">
+            This QR can be scanned only once.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

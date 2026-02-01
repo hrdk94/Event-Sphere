@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import ClubNav from "../components/ClubNav";
 
-function ClubEvents() {
+const ClubEvents = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
@@ -28,7 +28,6 @@ function ClubEvents() {
     try {
       await api.patch(`/club/events/${eventId}/cancel`);
 
-      // Update UI immediately
       setEvents((prev) =>
         prev.map((ev) =>
           ev._id === eventId ? { ...ev, isCancelled: true } : ev
@@ -43,82 +42,105 @@ function ClubEvents() {
     }
   };
 
-  if (loading) return <p>Loading your events...</p>;
-  if (events.length === 0) return <p>You haven’t created any events yet.</p>;
-
   return (
-    <div>
+    <div className="min-h-screen bg-zinc-900 text-zinc-100">
       <ClubNav />
-      <h2>My Events</h2>
 
-      {message && <p>{message}</p>}
+      <div className="max-w-5xl mx-auto p-6">
+        <h1 className="text-2xl font-semibold text-white mb-1">
+          My Events
+        </h1>
+        <p className="text-zinc-400 mb-6">
+          Manage all events created by your club
+        </p>
 
-      {events.map((event) => (
-        <div
-          key={event._id}
-          style={{
-            border: "1px solid #ccc",
-            padding: "12px",
-            marginBottom: "12px",
-          }}
-        >
-          <h3>{event.title}</h3>
-
-          <p>
-            <strong>Approval Status:</strong> {event.status}
+        {message && (
+          <p className="mb-4 text-sm text-emerald-400">
+            {message}
           </p>
+        )}
 
-          <p>
-            <strong>Time Status:</strong> {event.timeStatus}
+        {loading && <p className="text-zinc-400">Loading your events…</p>}
+
+        {!loading && events.length === 0 && (
+          <p className="text-zinc-400">
+            You haven’t created any events yet.
           </p>
+        )}
 
-          {event.isCancelled && (
-            <p style={{ color: "red" }}>❌ Event Cancelled</p>
-          )}
-
-          <p>
-            <strong>Date:</strong>{" "}
-            {new Date(event.date).toDateString()}
-          </p>
-
-          {/* Actions */}
-          {event.status === "approved" && !event.isCancelled && (
-            <>
-              <button
-                onClick={() =>
-                  navigate(`/club/events/${event._id}/registrations`)
-                }
-              >
-                View Registrations
-              </button>{" "}
-              <button
-                onClick={() =>
-                  navigate(`/club/events/${event._id}/stats`)
-                }
-              >
-                View Stats
-              </button>
-            </>
-          )}
-
-          <br /><br />
-
-          {event.isCancelled ? (
-            <p style={{ color: "red" }}>
-              No actions available (event cancelled)
-            </p>
-          ) : (
-            <button
-              onClick={() => handleCancelEvent(event._id)}
-              style={{ color: "red" }}
+        <div className="grid grid-cols-1 gap-5">
+          {events.map((event) => (
+            <div
+              key={event._id}
+              className="bg-zinc-800 border border-zinc-700 rounded-xl p-5 space-y-3"
             >
-              Cancel Event
-            </button>
-          )}
+              <h3 className="text-lg font-semibold text-white">
+                {event.title}
+              </h3>
+
+              <div className="text-sm text-zinc-400 space-y-1">
+                <p>
+                  Date: {new Date(event.date).toDateString()}
+                </p>
+                <p>
+                  Status:{" "}
+                  <span className="font-medium">
+                    {event.status}
+                  </span>
+                </p>
+                <p>Time: {event.timeStatus}</p>
+              </div>
+
+              {event.isCancelled && (
+                <p className="text-red-400 text-sm font-medium">
+                  ❌ Event Cancelled
+                </p>
+              )}
+
+              <div className="flex flex-wrap gap-3 pt-3">
+                {event.status === "approved" && (
+                  <>
+                    <button
+                      onClick={() =>
+                        navigate(
+                          `/club/events/${event._id}/registrations`
+                        )
+                      }
+                      className="px-4 py-2 bg-zinc-700 hover:bg-zinc-600 rounded-md text-sm"
+                    >
+                      View Registrations
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        navigate(
+                          `/club/events/${event._id}/stats`
+                        )
+                      }
+                      className="px-4 py-2 bg-zinc-700 hover:bg-zinc-600 rounded-md text-sm"
+                    >
+                      View Stats
+                    </button>
+                  </>
+                )}
+
+                {!event.isCancelled && (
+                  <button
+                    onClick={() =>
+                      handleCancelEvent(event._id)
+                    }
+                    className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-md text-sm text-white"
+                  >
+                    Cancel Event
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
     </div>
   );
-}
+};
 
 export default ClubEvents;
