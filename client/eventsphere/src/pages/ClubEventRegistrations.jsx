@@ -7,7 +7,6 @@ function ClubEventRegistrations() {
   const { eventId } = useParams();
   const [registrations, setRegistrations] = useState([]);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
 
   const fetchRegistrations = async () => {
     try {
@@ -15,8 +14,6 @@ function ClubEventRegistrations() {
       setRegistrations(res.data.registrations);
     } catch (err) {
       setError("Failed to load registrations");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -34,56 +31,23 @@ function ClubEventRegistrations() {
     fetchRegistrations();
   };
 
-  if (loading) return <p>Loading registrations...</p>;
   if (error) return <p>{error}</p>;
-  if (registrations.length === 0)
-    return <p>No registrations yet for this event.</p>;
 
   return (
     <div>
       <ClubNav />
-      <h2>Event Registrations</h2>
-      <p>Total Registrations: {registrations.length}</p>
+      <h2>Registrations</h2>
 
       {registrations.map((reg) => (
-        <div
-          key={reg._id}
-          style={{
-            border: "1px solid #ccc",
-            padding: "14px",
-            marginBottom: "12px",
-          }}
-        >
-          {/* STUDENT INFO */}
-          <section>
-            <p>
-              <strong>{reg.userId.name}</strong>
-            </p>
-            <p>{reg.userId.email}</p>
-          </section>
+        <div key={reg._id} style={{ border: "1px solid #ccc", margin: 8 }}>
+          <p>{reg.userId.name} ({reg.userId.email})</p>
+          <p>Status: {reg.status}</p>
 
-          <hr />
-
-          {/* STATUS */}
-          <section>
-            <p>
-              <strong>Status:</strong>{" "}
-              {reg.status === "pending" && "🕒 Pending"}
-              {reg.status === "approved" && "✅ Approved"}
-              {reg.status === "rejected" && "❌ Rejected"}
-            </p>
-          </section>
-
-          {/* ACTIONS */}
           {reg.status === "pending" && (
-            <section>
-              <button onClick={() => handleApprove(reg._id)}>
-                Approve
-              </button>{" "}
-              <button onClick={() => handleReject(reg._id)}>
-                Reject
-              </button>
-            </section>
+            <>
+              <button onClick={() => handleApprove(reg._id)}>Approve</button>
+              <button onClick={() => handleReject(reg._id)}>Reject</button>
+            </>
           )}
         </div>
       ))}

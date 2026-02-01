@@ -12,7 +12,7 @@ function MyRegistrations() {
     const fetchRegistrations = async () => {
       try {
         const res = await api.get("/registrations/mine");
-        setRegistrations(res.data);
+        setRegistrations(res.data); // backend returns ARRAY
       } catch (err) {
         console.error("Failed to fetch registrations", err);
       } finally {
@@ -23,7 +23,9 @@ function MyRegistrations() {
     fetchRegistrations();
   }, []);
 
-  if (loading) return <p>Loading your registrations...</p>;
+  if (loading) {
+    return <p>Loading your registrations...</p>;
+  }
 
   if (registrations.length === 0) {
     return <p>You have not registered for any events.</p>;
@@ -39,43 +41,39 @@ function MyRegistrations() {
           key={reg._id}
           style={{
             border: "1px solid #ccc",
-            padding: "16px",
-            marginBottom: "16px",
+            padding: "12px",
+            marginBottom: "12px",
           }}
         >
-          {/* EVENT INFO */}
-          <section>
-            <h3>{reg.eventId.title}</h3>
-            <p>
-              <strong>Date:</strong>{" "}
-              {new Date(reg.eventId.date).toDateString()}
-            </p>
+          <h3>{reg.eventId.title}</h3>
 
-            {reg.eventId.isCancelled && (
-              <p style={{ color: "red" }}>❌ Event Cancelled</p>
-            )}
-          </section>
+          <p>
+            <strong>Date:</strong>{" "}
+            {new Date(reg.eventId.date).toDateString()}
+          </p>
 
-          <hr />
+          <p>
+            <strong>Status:</strong>{" "}
+            {reg.status === "pending" && "Pending Approval"}
+            {reg.status === "approved" && "Approved"}
+            {reg.status === "rejected" && "Rejected"}
+          </p>
 
-          {/* REGISTRATION STATUS */}
-          <section>
-            <p>
-              <strong>Registration Status:</strong>{" "}
-              {reg.status === "pending" && "🕒 Pending Approval"}
-              {reg.status === "approved" && "✅ Approved"}
-              {reg.status === "rejected" && "❌ Rejected"}
-            </p>
-          </section>
+          <p>
+            <strong>Attendance:</strong>{" "}
+            {reg.attended ? " Attended" : " Not Attended"}
+          </p>
 
-          {/* ATTENDANCE + QR */}
-          <section>
-            <p>
-              <strong>Attendance:</strong>{" "}
-              {reg.attended ? "✅ Attended" : "❌ Not Attended"}
-            </p>
+          {reg.eventId.isCancelled && (
+            <p style={{ color: "red" }}>Event Cancelled</p>
+          )}
 
-            {reg.status === "approved" &&
+          <p>
+            <strong>Status:</strong>{" "}
+            {reg.attended ? "Attended" : reg.status}
+          </p>
+
+          {reg.status === "approved" &&
             !reg.attended &&
             !reg.eventId.isCancelled &&
             reg.eventId.timeStatus !== "past" ? (
@@ -89,21 +87,16 @@ function MyRegistrations() {
             ) : (
               <p>QR not available</p>
             )}
-          </section>
 
-          <hr />
-
-          {/* CERTIFICATE */}
-          <section>
             <p>
               <strong>Certificate:</strong>{" "}
               {reg.certificateIssued
-                ? "🏅 Issued"
+                ? "Issued"
                 : reg.attended
-                ? "⏳ Eligible"
-                : "❌ Not Eligible"}
+                ? "Eligible"
+                : "Not Eligible"}
             </p>
-          </section>
+
         </div>
       ))}
     </div>
