@@ -6,6 +6,16 @@ import AdminNav from "../components/AdminNav";
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const { logout, user } = useAuth();
+  const [stats, setStats] = useState(null);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      const res = await api.get("/analytics/admin");
+      setStats(res.data);
+    };
+
+    fetchStats();
+  }, []);
 
   return (
     <div className="min-h-screen bg-zinc-900 text-zinc-100">
@@ -23,22 +33,34 @@ const AdminDashboard = () => {
         </p>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
-          {[
-            "Total Events",
-            "Pending Approvals",
-            "Active Users",
-          ].map((label) => (
-            <div
-              key={label}
-              className="bg-zinc-800 border border-zinc-700 rounded-xl p-6"
-            >
-              <p className="text-sm text-zinc-400">{label}</p>
-              <p className="text-3xl font-semibold text-white mt-2">
-                —
-              </p>
-            </div>
-          ))}
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-6 mb-10">
+          <div className="bg-zinc-800 border border-zinc-700 rounded-xl p-6">
+            <p className="text-sm text-zinc-400">Total Events</p>
+            <p className="text-3xl font-semibold text-white mt-2">
+              {stats?.totalEvents ?? "—"}
+            </p>
+          </div>
+
+          <div className="bg-zinc-800 border border-zinc-700 rounded-xl p-6">
+            <p className="text-sm text-zinc-400">Pending Events</p>
+            <p className="text-3xl font-semibold text-yellow-400 mt-2">
+              {stats?.pendingEvents ?? "—"}
+            </p>
+          </div>
+
+          <div className="bg-zinc-800 border border-zinc-700 rounded-xl p-6">
+            <p className="text-sm text-zinc-400">Total Users</p>
+            <p className="text-3xl font-semibold text-white mt-2">
+              {stats?.totalUsers ?? "—"}
+            </p>
+          </div>
+
+          <div className="bg-zinc-800 border border-zinc-700 rounded-xl p-6">
+            <p className="text-sm text-zinc-400">Registrations</p>
+            <p className="text-3xl font-semibold text-white mt-2">
+              {stats?.totalRegistrations ?? "—"}
+            </p>
+          </div>
         </div>
 
         {/* Actions */}

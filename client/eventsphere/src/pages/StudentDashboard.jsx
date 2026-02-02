@@ -6,6 +6,16 @@ import StudentNav from "../components/StudentNav";
 function StudentDashboard() {
   const navigate = useNavigate();
   const { logout, user } = useAuth();
+  const [stats, setStats] = useState(null);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      const res = await api.get("/analytics/student");
+      setStats(res.data);
+    };
+
+    fetchStats();
+  }, []);
 
   return (
       <div className="min-h-screen bg-zinc-900 text-zinc-100">
@@ -19,20 +29,26 @@ function StudentDashboard() {
         Overview of your activity on EventSphere
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <div className="bg-zinc-800 border border-zinc-700 rounded-lg p-4">
-          <p className="text-zinc-400 text-sm">Registered Events</p>
-          <p className="text-2xl font-semibold text-white">X</p>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+        <div className="bg-zinc-800 border border-zinc-700 rounded-xl p-6">
+          <p className="text-sm text-zinc-400">Registrations</p>
+          <p className="text-3xl font-semibold text-white mt-2">
+            {stats?.totalRegistrations ?? "—"}
+          </p>
         </div>
 
-        <div className="bg-zinc-800 border border-zinc-700 rounded-lg p-4">
-          <p className="text-zinc-400 text-sm">Attended</p>
-          <p className="text-2xl font-semibold text-white">X</p>
+        <div className="bg-zinc-800 border border-zinc-700 rounded-xl p-6">
+          <p className="text-sm text-zinc-400">Attended</p>
+          <p className="text-3xl font-semibold text-white mt-2">
+            {stats?.attended ?? "—"}
+          </p>
         </div>
 
-        <div className="bg-zinc-800 border border-zinc-700 rounded-lg p-4">
-          <p className="text-zinc-400 text-sm">Certificates</p>
-          <p className="text-2xl font-semibold text-white">X</p>
+        <div className="bg-zinc-800 border border-zinc-700 rounded-xl p-6">
+          <p className="text-sm text-zinc-400">Certificates Eligible</p>
+          <p className="text-3xl font-semibold text-white mt-2">
+            {stats?.certificatesEligible ?? "—"}
+          </p>
         </div>
       </div>
 

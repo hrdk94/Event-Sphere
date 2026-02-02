@@ -36,3 +36,6 @@ app.use("/api", attendanceRoutes);
 app.use("/api/stats", require("./routes/stats"));
 
 app.use("/api/club", require("./routes/club"));
+
+const analyticsRoutes = require("./routes/analytics");
+app.use("/api/analytics", analyticsRoutes);
