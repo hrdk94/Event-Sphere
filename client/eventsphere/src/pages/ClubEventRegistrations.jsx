@@ -51,6 +51,21 @@ function ClubEventRegistrations() {
           )}
         </div>
       ))}
+
+      {reg.attended && !reg.certificateIssued && (
+        <button
+          onClick={() => issueCertificate(reg._id)}
+          className="px-3 py-1 bg-blue-500 hover:bg-blue-600 rounded-md text-sm text-white"
+        >
+          Issue Certificate
+        </button>
+      )}
+
+      {reg.certificateIssued && (
+        <span className="text-green-400 text-sm font-medium">
+          Certificate Issued
+        </span>
+      )}
     </div>
   );
 }

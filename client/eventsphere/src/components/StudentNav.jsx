@@ -31,7 +31,7 @@ function StudentNav() {
             <Link to="/my-registrations" className={linkClass("/my-registrations")}>
               My Registrations
             </Link>
-            <Link to="/logout" className="px-3 py-2 text-sm text-red-400 hover:text-red-300">
+            <Link to="/" className="px-3 py-2 text-sm text-red-400 hover:text-red-300">
               Logout
             </Link>
           </div>

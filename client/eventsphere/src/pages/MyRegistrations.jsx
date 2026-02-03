@@ -133,19 +133,13 @@ function MyRegistrations() {
                   )}
 
                   <p className="text-sm">
-                    <span className="text-zinc-400">Certificate:</span>{" "}
+                    <strong>Certificate:</strong>{" "}
                     {reg.certificateIssued ? (
-                      <span className="text-green-400 ml-1">
-                        Issued
-                      </span>
+                      <span className="text-green-400 font-medium">Issued</span>
                     ) : reg.attended ? (
-                      <span className="text-yellow-400 ml-1">
-                        Eligible
-                      </span>
+                      <span className="text-yellow-400">Eligible</span>
                     ) : (
-                      <span className="text-zinc-500 ml-1">
-                        Not Eligible
-                      </span>
+                      <span className="text-zinc-400">Not eligible</span>
                     )}
                   </p>
                 </section>
