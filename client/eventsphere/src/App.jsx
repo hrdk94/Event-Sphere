@@ -21,6 +21,7 @@ import QRScanner from "./pages/QRScanner";
 import QRCodeTicket from "./pages/QRCodeTicket";
 import ClubEventStats from "./pages/ClubEventStats";
 import ClubEventRegistrations from "./pages/ClubEventRegistrations";
+import AdminUsers from "./pages/AdminUsers";
 
 function App() {
   return (
@@ -141,6 +142,14 @@ function App() {
           element={
             <ProtectedRoute>
               <ClubEventStats />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <ProtectedRoute>
+              <AdminUsers />
             </ProtectedRoute>
           }
         />

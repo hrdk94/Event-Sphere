@@ -35,6 +35,13 @@ const AdminNav = () => {
             </Link>
 
             <Link
+              to="/admin/users"
+              className={linkClass("/admin/users")}
+            >
+              Users
+            </Link>
+
+            <Link
               to="/"
               className="px-3 py-2 text-sm font-medium text-red-400 hover:text-red-300"
             >

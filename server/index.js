@@ -16,13 +16,14 @@ const eventRoutes = require("./routes/eventRoutes");
 const registrationRoutes = require("./routes/registerationRoutes");
 const attendanceRoutes = require("./routes/attendanceRoutes");
 const analyticsRoutes = require("./routes/analytics");
+const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 
 app.use(cors({
   origin: "https://event-sphere-lemon-seven.vercel.app"
   ,
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   credentials: true
 }));
 
@@ -37,6 +38,7 @@ app.use("/api", attendanceRoutes);
 app.use("/api/stats", require("./routes/stats"));
 app.use("/api/club", require("./routes/club"));
 app.use("/api/analytics", analyticsRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.get("/", (req, res) => {
   res.send("EventSphere API Running...");
