@@ -20,7 +20,8 @@ const analyticsRoutes = require("./routes/analytics");
 const app = express();
 
 app.use(cors({
-  origin: "https://event-sphere-lemon-seven.vercel.app",
+  origin: "https://event-sphere-lemon-seven.vercel.app"
+  ,
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));

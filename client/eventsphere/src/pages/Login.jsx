@@ -16,6 +16,7 @@ const Login = () => {
     } catch (err) {
       alert("Login failed");
       console.error(err);
+      console.log(import.meta.env.VITE_API_URL);
     }
   };
 
